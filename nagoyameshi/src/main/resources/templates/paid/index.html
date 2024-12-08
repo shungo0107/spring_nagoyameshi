@@ -1,0 +1,86 @@
+ <!DOCTYPE html>
+ <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">    
+     <head>
+         <div th:replace="~{fragment :: meta}"></div>   
+         <div th:replace="~{fragment :: styles}"></div>
+         <!-- Flatpickr -->
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+           
+         <title>有料会員登録</title>   
+     </head>
+     <body>
+         <div class="samuraitravel-wrapper">
+             <!-- ヘッダー -->
+             <div th:replace="~{fragment :: header}"></div>
+             
+             <main>
+                 <div class="container pt-4 pb-5 samuraitravel-container">
+					 <div class="row justify-content-center">
+						 <div class="col-xl-5 col-lg-6 col-md-8">
+                             <nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+								 <ol class="breadcrumb mb-0">                        
+                                     <li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+                                     <li class="breadcrumb-item active" aria-current="page">有料会員登録</li>
+                                 </ol>
+                             </nav>
+                         
+                             <h1 class="mb-4 text-center">有料会員登録</h1>
+                             
+                             <div class="card mb-3">
+								 <div class="card-header text-center">
+									 有料プランの内容
+								</div>
+								<div class="card-body">
+									<ul class="list-group list-group-flush">
+										<li class="list-group-item">当日の2時間前までならいつでも予約可能</li>
+										<li class="list-group-item">店舗をお好きなだけお気に入りに追加可能</li>
+										<li class="list-group-item">レビューを全件閲覧可能</li>
+										<li class="list-group-item">レビューを投稿可能</li>
+										<li class="list-group-item">月額たったの300円</li>
+									</ul>
+								</div>
+                         </div>
+                         
+						<form class="row g-3" method="get" th:action="@{/paid/create}"  th:object="${paidInputForm}">
+							<div class="col-md-6">
+								<label for="creditLastName" class="form-label" >カード名義人</label>
+								<input type="text" class="form-control" id="creditLastName" placeholder="姓" th:field="*{creditLastName}">
+							 </div>
+							 <div class="col-md-6">
+								<label for="creditFirstName" class="form-label" >　</label>
+								<input type="text" class="form-control" id="creditFirstName" placeholder="名" th:field="*{creditFirstName}">
+							 </div>
+							 <div class="col-md-5">
+							    <label for="creditNumber" class="form-label">カード番号</label>
+							    <input type="text" class="form-control" id="creditNumber" placeholder="0000-0000-0000-0000" th:field="*{creditNumber}">
+							  </div>
+							  <div class="col-md-2">
+							    <label for="creditYear" class="form-label">月 / 年</label>
+								 <input type="text" class="form-control"  id="creditYear" placeholder="01"th:field="*{creditYear}">
+							  </div>
+							  <div class="col-md-2">
+							    <label for="creditMonth" class="form-label">　</label>
+								 <input type="text" class="form-control"  id="creditMonth" placeholder="01"th:field="*{creditMonth}">
+							  </div>
+							  <div class="col-md-4">
+							    <label for="securityCode" class="form-label">セキュリティコード</label>
+							    <input type="text" class="form-control" id="securityCode" placeholder="3桁 or 4桁" th:field="*{creditSecurityCode}">
+							  </div>
+							  <div class="form-group d-flex justify-content-center my-4">
+								  <button type="submit" class="btn text-white shadow-sm w-75 samuraitravel-btn">登録する</button>
+							  </div>
+						 </form>
+
+						</div>
+				     </div>
+				 </div>
+             </main>
+             
+             <!-- フッター -->
+             <div th:replace="~{fragment :: footer}"></div>
+         </div>    
+         
+         <div th:replace="~{fragment :: scripts}"></div>  
+         
+   </body>
+ </html>

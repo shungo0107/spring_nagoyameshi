@@ -1,0 +1,164 @@
+ <!DOCTYPE html>
+ <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">    
+     <head>
+         <div th:replace="~{fragment :: meta}"></div>   
+              
+         <div th:replace="~{fragment :: styles}"></div>
+           
+         <title>カテゴリー一覧</title>   
+     </head>
+     <body>
+         <div class="samuraitravel-wrapper">
+             <!-- ヘッダー -->
+             <div th:replace="~{fragment :: header}"></div>
+             
+             <main>
+                 <div class="container pt-4 pb-5 samuraitravel-container">
+                     <div class="row justify-content-center">
+                         <div class="col-xxl-4 col-xl-5 col-lg-6">
+                             
+                             <h1 class="mb-4 text-center">カテゴリ一覧</h1>   
+                             
+                             <div class="d-flex justify-content-center align-items-end">
+                                 <form method="get" th:action="@{/admin/categories}" class="mb-3">
+                                     <div class="input-group">
+                                         <input type="text" class="form-control" name="keyword" th:value="${categoryName}" placeholder="カテゴリー">
+                                         <button type="submit" class="btn text-white shadow-sm samuraitravel-btn">検索</button> 
+                                     </div>               
+                                 </form>                                                                                
+                             </div>
+
+                             <div class="d-flex justify-content-center align-items-end">
+                                 <form method="get" th:action="@{/admin/categories/create}" class="mb-3" id="createForm">
+                                     <div class="input-group">
+                                         <input type="text" class="form-control" name="category" id="categoryCreateName">
+                                         <button type="submit" class="btn text-white shadow-sm samuraitravel-btn2" id="categoryCreate-btn">登録</button> 
+                                     </div>               
+                                 </form>
+                               </div>
+                                 
+                             <div class="d-flex justify-content-center align-items-end" disabled>
+                                 <form method="get" th:action="@{/admin/categories/update}" class="mb-3"  id="editForm">
+                                     <div class="input-group">
+										 <input type="hidden" id="categoryEditId" name ="categoryEditId" value="">
+                                         <input type="text" class="form-control" name="categoryEditName" id="categoryEditName" disabled>
+                                         <button type="submit" class="btn text-white shadow-sm samuraitravel-btn2" id="categoryEdit-btn"  disabled>更新</button> 
+                                     </div>               
+                                 </form>                                                    
+                             </div>
+                 
+                             <div th:if="${successMessage}" class="alert alert-info">
+                                 <span th:text="${successMessage}"></span>
+                             </div>   
+                             
+                             <table class="table">
+                                 <thead>
+                                     <tr>
+										 <th scope="col" style="display:none;">ID</th>
+                                         <th scope="col">No.</th>
+                                         <th scope="col">カテゴリ名</th>
+                                         <th scope="col"></th>
+                                         <th scope="col"></th>
+                                     </tr>
+                                 </thead>   
+                                 <tbody>                                                     
+                                     <tr th:each="category , ctn: ${categoryPage}">
+                                         <td th:text="${category.getId()}" class="categoryId" hidden></td>
+                                         <td th:text="${ctn.index+1}"></td>
+                                         <td th:text="${category.getName()}" class="categoryName"></td>
+                                         <td><a class="editLink" href="#">編集</a></td>
+										 <td><a href="#" class="samuraitravel-link-danger" data-bs-toggle="modal" th:data-bs-target="${'#deleteCategoryModal' + category.getId()}">削除</a></td>
+										 
+										 <!-- 削除用モーダル -->
+                                         <div class="modal fade" th:id="${'deleteCategoryModal' + category.getId()}" tabindex="-1" th:aria-labelledby="${'deleteCategoryModalLabel' + category.getId()}">
+                                             <div class="modal-dialog">
+                                                 <div class="modal-content">
+                                                     <div class="modal-header">
+                                                         <h5 class="modal-title" th:id="${'deleteCategoryModalLabel' + category.getId()}" th:text="${category.getName() + 'を削除してもよろしいですか？'}"></h5>
+                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                                                     </div>
+                                                     <div class="modal-footer">
+                                                         <form method="get" th:action="@{/admin/categories/__${category.getId()}__/delete}">
+                                                             <button type="submit" class="btn samuraitravel-btn-danger text-white shadow-sm">削除</button>
+                                                         </form>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>       
+                                                                                                                   
+                                     </tr>                                      
+                                 </tbody>
+                             </table>
+                             
+                             <script>
+								    document.querySelectorAll('.editLink').forEach(function(link) {
+								        link.addEventListener('click', function(event) {
+								            event.preventDefault();  // デフォルトのリンク動作を防ぐ
+								            
+								            // クリックされたリンクの親行を取得
+								            const row = link.closest('tr');
+								            
+								             // 行内のカテゴリIDとカテゴリ名取得
+								             const categoryId = row.querySelector('.categoryId').textContent.trim();
+								             const categoryName = row.querySelector('.categoryName').textContent.trim();
+								             
+								              // フォームフィールドにカテゴリIDとカテゴリ名をセット
+								              document.getElementById('categoryEditId').value = categoryId;
+								              document.getElementById('categoryEditName').value = categoryName;
+								              
+								              const categoryEditName = document.getElementById('categoryEditName');
+								              categoryEditName.disabled = false;
+								              const categoryEditBtn = document.getElementById('categoryEdit-btn');
+								              categoryEditBtn.disabled = false;
+								              const categoryCreateName = document.getElementById('categoryCreateName');
+								              categoryCreateName.disabled = true;
+								              const categoryCreateBtn = document.getElementById('categoryCreate-btn');
+								              categoryCreateBtn.disabled = true;
+								              
+								              /*
+								              const editFormDisplay = document.getElementById('editForm');
+								              if (editFormDisplay.style.display === 'none' || editFormDisplay.style.display === '') {
+												  editFormDisplay.style.display = 'block'; // 要素を表示
+												  } else {
+													  editFormDisplay.style.display = 'none'; // 要素を非表示
+													  }
+											  const createFormDisplay = document.getElementById('createForm');
+								              if (editFormDisplay.style.display === 'none' || editFormDisplay.style.display === '') {
+
+											  createFormDisplay.style.display = 'none'; // 要素を非表示
+											  */
+								        });
+								    });
+							</script>
+                             
+                             <!-- ページネーション -->
+                             <div th:if="${categoryPage.getTotalPages() > 1}" class="d-flex justify-content-center">
+                                 <nav aria-label="カテゴリー一覧ページ">
+                                     <ul class="pagination">
+                                         <li class="page-item">
+                                             <span th:if="${categoryPage.isFirst()}" class="page-link disabled">前</span>
+                                             <a th:unless="${categoryPage.isFirst()}" th:href="@{/admin/categories(page = ${categoryPage.getNumber() - 1}, keyword = ${keyword})}" class="page-link samuraitravel-page-link">前</a>
+                                         </li>
+                                         <li th:each="i : ${#numbers.sequence(0, categoryPage.getTotalPages() - 1)}" class="page-item">
+                                             <span th:if="${i == categoryPage.getNumber()}" class="page-link active samuraitravel-active" th:text="${i + 1}"></span>
+                                             <a th:unless="${i == categoryPage.getNumber()}" th:href="@{/admin/categories(page = ${i}, keyword = ${keyword})}" class="page-link samuraitravel-page-link" th:text="${i + 1}"></a>
+                                         </li>
+                                         <li class="page-item">                        
+                                             <span th:if="${categoryPage.isLast()}" class="page-link disabled">次</span>
+                                             <a th:unless="${categoryPage.isLast()}" th:href="@{/admin/categories(page = ${categoryPage.getNumber() + 1}, keyword = ${keyword})}" class="page-link samuraitravel-page-link">次</a>
+                                         </li>
+                                     </ul>
+                                 </nav> 
+                             </div>                                      
+                         </div>
+                     </div>
+                 </div>
+             </main>
+             
+             <!-- フッター -->
+             <div th:replace="~{fragment :: footer}"></div>
+         </div>    
+         
+         <div th:replace="~{fragment :: scripts}"></div>  
+   </body>
+ </html>

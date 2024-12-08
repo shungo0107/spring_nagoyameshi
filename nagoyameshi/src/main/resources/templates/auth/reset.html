@@ -1,0 +1,59 @@
+ <!DOCTYPE html>
+ <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+     <head>
+         <div th:replace="~{fragment :: meta}"></div>   
+              
+         <div th:replace="~{fragment :: styles}"></div> 
+         
+         <title>パスワードリセット</title>       
+     </head>
+     <body>
+         <div class="samuraitravel-wrapper">
+             <!-- ヘッダー -->
+             <div th:replace="~{fragment :: header}"></div>
+             
+             <main>
+                 <div class="container pt-4 pb-5 samuraitravel-container">
+                     <div class="row justify-content-center">
+                         <div class="col-xl-5 col-lg-6 col-md-8">
+							 
+							<h1 class="mb-4 text-center">パスワード再設定</h1>  
+							<p class="mb-4">パスワード再設定用のメールを送信します。NAGOYAMESHIに登録されたメールアドレスを入力してください。</p>
+							 
+							 <form method="post" th:action="@{/reset}" th:object="${ResetForm}">
+								                                                                                                                                
+                                 <div class="form-group row mb-3" >
+                                     <div class="col-md-5">
+                                         <label for="email" class="col-form-label text-end fw-bold">
+                                             <div class="d-flex align-items-center">
+                                                 <span >Eメールアドレス</span>
+                                             </div>
+                                         </label>
+                                     </div>
+                                     <div class="col-md-7">
+                                         <div th:if="${#fields.hasErrors('email')}" class="text-danger small mb-2" th:errors="*{email}"></div>
+                                         <input type="text" name="email" class="form-control" th:field="*{email}" autocomplete="email" placeholder="taro.samurai@example.com">
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="form-group d-flex justify-content-center my-4">
+                                     <button type="submit" class="btn text-white shadow-sm w-50 samuraitravel-btn">送信</button>
+                                 </div>
+                             </form>
+                             
+                             <div th:if="${successMessage}" class="alert alert-info">
+                                 <span th:text="${successMessage}"></span>
+                             </div> 
+                             
+                         </div>
+                     </div>
+                 </div>           
+             </main>
+             
+             <!-- フッター -->
+             <div th:replace="~{fragment :: footer}"></div>
+         </div>    
+         
+         <div th:replace="~{fragment :: scripts}"></div>         
+     </body>
+ </html>
